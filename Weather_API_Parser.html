@@ -16,13 +16,15 @@
 		var app = angular.module('myApp', []);
 		app.controller('myController', function($scope, $http) {
 			
-			let city = "Genemuiden";
-
-			$http.get("http://api.openweathermap.org/data/2.5/forecast?q=" + city.toString() + ",nl&units=metric&appid=f0c432bfc536c586fb6aeec4ba89525a")
-
-			.then(function(response) {
-				$scope.weather = response.data;
-			});
+			$scope.fetchByCity = function (city, country) {
+				if(!city == "" || !country == ""){
+					$http.get("http://api.openweathermap.org/data/2.5/forecast?q="+city.toString()+","+country.toString()+"&units=metric&appid=f0c432bfc536c586fb6aeec4ba89525a")
+						.then(function(response) {
+						$scope.weather = response.data;
+					});
+				}
+			}
+			
 		});
 	</script>
 	<!-- CSS -->
@@ -43,8 +45,9 @@
 		  
 		<b class="text-left">⬇️ Enter your city below ⬇️</b>
 		<div class="input-group mb-3" style="width: 35%; max-height: 100%">
-			<input type="text" class="form-control" placeholder="Zwolle">
-			<button type="button" class="btn btn-primary btn-sm">☀️Fetch Weather!☀️</button>
+			<input type="text" class="form-control" placeholder="Zwolle" ng-model="post.City" >
+			<input type="text" class="form-control" placeholder="NL" ng-model="post.Country" >
+			<button type="button" ng-click="fetchByCity(post.City, post.Country)" class="btn btn-primary btn-sm">☀️Fetch Weather!☀️</button>
 		</div>
 		  
 		<h1 class="text-monospace">The Weather in <u>{{weather.city.name}} {{weather.city.country}}</u> For the next couple of hours: </h1>
@@ -106,7 +109,7 @@
 						{{weather.main.pressure}}
 					</td>
 					<td scope="col">
-						<img src="Weather_Images/Arrow.png" style="transform: rotate({{weather.wind.deg}}deg); height: 25px; width: 50px;"/>
+						<img src="Weather_Images/Arrow.png" style="transform: rotate({{weather.wind.deg}}deg); 	"/>
 				 	</td>
 				</tr>
 			</tbody>
